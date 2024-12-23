@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <title>Analisis CV - {{ cv[1] }}</title>
+</head>
+<body>
+    <header class="bg-primary text-white text-center py-3">
+        <h1>Analisis CV - {{ cv[1] }}</h1>
+        <nav class="nav justify-content-center">
+            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
+            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
+            <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a> <!-- Link ke Daftar CV -->
+            <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a> <!-- Link ke Daftar Kriteria -->
+            <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
+        </nav>
+    </header>
+
+    <main class="container mt-5">
+        <h3>Teks Ekstraksi</h3>
+        <pre>{{ cv[2] }}</pre> <!-- Teks hasil ekstraksi -->
+
+        <h4 class="mt-4">Hasil Analisis:</h4>
+        <p>{{ analysis_result }}</p> <!-- Menampilkan hasil analisis (misalnya, jumlah kata) -->
+
+        <h5>Skor Analisis:</h5>
+        <ul>
+            <li><strong>Skor Pendidikan:</strong> {{ analysis_scores.education_score }}</li>
+            <li><strong>Skor Pengalaman:</strong> {{ analysis_scores.experience_score }}</li>
+            <li><strong>Skor Keterampilan:</strong> {{ analysis_scores.skills_score }}</li>
+            <li><strong>Skor Bahasa:</strong> {{ analysis_scores.language_score }}</li>
+            <li><strong>Total Skor:</strong> {{ analysis_scores.total_score }}</li>
+        </ul>
+
+        <a href="{{ url_for('cv_list') }}" class="btn btn-secondary">Kembali ke Daftar CV</a>
+    </main>
+</body>
+</html>

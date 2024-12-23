@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <title>Dashboard</title>
+</head>
+<body>
+    <header class="bg-primary text-white text-center py-3">
+        <h1>Dashboard Analisis CV Otomatis</h1>
+        <nav class="nav justify-content-center">
+            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
+            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
+            <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a> <!-- Link ke Daftar CV -->
+            <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a> <!-- Link ke Daftar Kriteria -->
+            <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
+        </nav>
+    </header>
+    <main class="container mt-5">
+        <div class="jumbotron text-center">
+            <h2>Selamat Datang di Dashboard</h2>
+            <p>Gunakan navigasi di atas untuk mengelola kriteria, mengunggah CV, dan menganalisis CV.</p>
+        </div>
+    
+        <!-- Statistik Ringkasan CV (Hanya Total CV Diupload) -->
+        <div class="row text-center mt-5">
+            <div class="col-md-4 offset-md-4"> <!-- Mengatur posisi agar berada di tengah -->
+                <div class="card border-primary mb-3">
+                    <div class="card-header">Total CV Diupload</div>
+                    <div class="card-body">
+                        <h4 class="card-title">15</h4> <!-- Ganti angka dengan data dinamis dari database -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Notifikasi Pengingat -->
+        <div class="alert alert-warning text-center mt-4" role="alert">
+            <strong>Perhatian!</strong> Ada CV yang belum dianalisis. Klik <a href="{{ url_for('analysis') }}" class="alert-link">di sini</a> untuk menganalisis sekarang.
+        </div>
+    
+        <!-- Tombol Akses Cepat -->
+        <div class="text-center mt-4">
+            <a href="criteria.html" class="btn btn-primary">Tambah Kriteria Baru</a>
+            <a href="upload.html" class="btn btn-success">Unggah CV Sekarang</a>
+            <a href="analysis.html" class="btn btn-info">Analisis CV</a>
+        </div>
+    </main>
+    
+    
+</body>
+</html>

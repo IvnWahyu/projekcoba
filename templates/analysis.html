@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <title>Analisis CV</title>
+</head>
+<body>
+    <header class="bg-primary text-white text-center py-3">
+        <h1>Analisis CV</h1>
+        <nav class="nav justify-content-center">
+            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
+            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
+            <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a> <!-- Link ke Daftar CV -->
+            <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a> <!-- Link ke Daftar Kriteria -->
+            <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
+        </nav>
+    </header>
+
+    <main class="container mt-5">
+        <h2>Pilih CV dan Kriteria untuk Analisis</h2>
+
+        <!-- Dropdown untuk memilih CV -->
+        <form method="POST">
+            <div class="form-group">
+                <label for="cv_id">Pilih CV</label>
+                {% if cvs %}
+                <select class="form-control" id="cv_id" name="cv_id" required>
+                    <option value="">Pilih CV yang akan dianalisis</option>
+                    {% for cv in cvs %}
+                    <option value="{{ cv[0] }}">{{ cv[1] }}</option>
+                    {% endfor %}
+                </select>
+                {% else %}
+                <div class="alert alert-warning">Tidak ada CV yang tersedia.</div>
+                {% endif %}
+            </div>
+
+            <!-- Dropdown untuk memilih Kriteria berdasarkan posisi -->
+            <div class="form-group">
+                <label for="criteria_id">Pilih Kriteria Penilaian</label>
+                <select class="form-control" id="criteria_id" name="criteria_id" required>
+                    <option value="">Pilih Kriteria Penilaian</option>
+                    {% for criteria in criteria_positions %}
+                        <option value="{{ criteria[0] }}">{{ criteria[1] }}</option>  <!-- criteria[0] adalah ID, criteria[1] adalah posisi -->
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Analisis CV</button>
+        </form>
+    </main>
+</body>
+</html>

@@ -1,0 +1,192 @@
+/* Global Body Styling */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.bg-gradient {
+    background: linear-gradient(90deg, #4e54c8, #8f94fb);
+}
+
+.btn-gradient-primary {
+    background: linear-gradient(90deg, #4e54c8, #8f94fb);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+}
+
+.btn-gradient-success {
+    background: linear-gradient(90deg, #11998e, #38ef7d);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+}
+
+.btn-gradient-info {
+    background: linear-gradient(90deg, #56ccf2, #2f80ed);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+}
+
+.btn-gradient-primary:hover, .btn-gradient-success:hover, .btn-gradient-info:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+    transition: all 0.3s ease-in-out;
+}
+
+footer {
+    background: linear-gradient(90deg, #232526, #414345);
+}
+
+.nav-link {
+    font-size: 1rem;
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+    color: #38ef7d !important;
+}
+
+.jumbotron {
+    border-radius: 15px;
+}
+
+.card {
+    border-radius: 15px;
+}
+
+
+/* Styling untuk Container Umum (Misalnya Formulir dan CV Upload) */
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+/* Styling untuk Judul Halaman */
+h1, h2, h3 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Styling untuk Formulir */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Styling untuk Tombol */
+button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Styling untuk Hasil Ekstraksi (Upload CV) */
+.result {
+    margin-top: 20px;
+}
+
+pre {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Styling untuk Hasil Ekstraksi Teks (Card) */
+.extracted-text-container {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.extracted-text-container pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #333;
+}
+
+.extracted-text-header {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+/* Styling untuk Tombol Kembali */
+.btn-back {
+    margin-top: 20px;
+}
+
+/* Styling untuk Daftar CV dan Analisis (analysis.html) */
+.cv-container {
+    margin-top: 30px;
+}
+
+.cv-card {
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cv-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.cv-text {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #333;
+}
+
+.cv-action {
+    text-align: right;
+}
+
+/* Styling Tombol Analisis CV */
+.btn-analyze {
+    background-color: #ff0000; /* Ubah warna latar belakang tombol menjadi hijau cerah */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.btn-analyze:hover {
+    background-color: #ff0000; /* Warna lebih gelap saat hover */
+    color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+
