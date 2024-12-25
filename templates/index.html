@@ -14,8 +14,8 @@
             <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
             <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
             <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
-            <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a> <!-- Link ke Daftar CV -->
-            <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a> <!-- Link ke Daftar Kriteria -->
+            <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a> 
+            <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a> 
             <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
         </nav>
     </header>
@@ -31,7 +31,7 @@
                 <div class="card border-primary mb-3">
                     <div class="card-header">Total CV Diupload</div>
                     <div class="card-body">
-                        <h4 class="card-title">15</h4> <!-- Ganti angka dengan data dinamis dari database -->
+                        <h4 class="card-title">15</h4> 
                     </div>
                 </div>
             </div>
@@ -49,7 +49,11 @@
             <a href="analysis.html" class="btn btn-info">Analisis CV</a>
         </div>
     </main>
-    
+    <footer class="text-center py-3 mt-5">
+        <p>&copy; 2024 - Analisis CV Otomatis</p>
+    </footer>
     
 </body>
 </html>
+
+
