@@ -264,3 +264,4 @@ def analyze_cv(cv_id):
 # Menjalankan aplikasi
 if __name__ == '__main__':
     app.run(debug=True)
+
