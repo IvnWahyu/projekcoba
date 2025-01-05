@@ -44,9 +44,9 @@
     
         <!-- Tombol Akses Cepat -->
         <div class="text-center mt-4">
-            <a href="criteria.html" class="btn btn-primary">Tambah Kriteria Baru</a>
-            <a href="upload.html" class="btn btn-success">Unggah CV Sekarang</a>
-            <a href="analysis.html" class="btn btn-info">Analisis CV</a>
+            <a href="{{ url_for('criteria') }}" class="btn btn-primary">Tambah Kriteria Baru</a>
+            <a href="{{ url_for('upload') }}" class="btn btn-success">Unggah CV Sekarang</a>
+            <a href="{{ url_for('analysis') }}" class="btn btn-info">Analisis CV</a>
         </div>
     </main>
     <footer class="text-center py-3 mt-5">

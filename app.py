@@ -198,6 +198,8 @@ def analyze_scores(extracted_text, criteria):
     experience_score = 0
     skills_score = 0
     language_score = 0
+    certificate_score = 0
+    award_score = 0
 
     # Skor Pendidikan
     if criteria[1] in extracted_text:  # criteria[1] berisi pendidikan yang dipilih (misalnya 'S1')
@@ -220,15 +222,31 @@ def analyze_scores(extracted_text, criteria):
     for language in languages:
         if language.strip().lower() in extracted_text.lower():
             language_score += 5  # Beri skor per bahasa yang cocok
+            
+    #skor sertifikasi
+    certificates = criteria[5].split(",")  # Misalnya 'Sertifikasi 1, Sertifikasi 2'
+    for certificate in certificates:    
+        if certificate.strip().lower() in extracted_text.lower():
+            certificate_score += 10# Beri skor per sertifikasi yang cocok
+            
+    
+    # Skor Penghargaan
+    award = criteria[6].split(",")  # Misalnya 'Penghargaan 1, Penghargaan 2'
+    for awards in award:
+        if awards.strip().lower() in extracted_text.lower():
+            award_score += 5  # Beri skor per penghargaan yang cocok
+
 
     # Total skor
-    total_score = education_score + experience_score + skills_score + language_score
+    total_score = education_score + experience_score + skills_score + language_score+ certificate_score+ award_score
 
     return {
         'education_score': education_score,
         'experience_score': experience_score,
         'skills_score': skills_score,
         'language_score': language_score,
+        'certificate_score': certificate_score,
+        'award_score': award_score,
         'total_score': total_score
     }
     

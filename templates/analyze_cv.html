@@ -33,10 +33,12 @@
             <li><strong>Skor Pengalaman:</strong> {{ analysis_scores.experience_score }}</li>
             <li><strong>Skor Keterampilan:</strong> {{ analysis_scores.skills_score }}</li>
             <li><strong>Skor Bahasa:</strong> {{ analysis_scores.language_score }}</li>
+            <li><strong>Skor Sertifikat:</strong> {{ analysis_scores.certificate_score }}</li>
+            <li><strong>Skor Penghargaan:</strong> {{ analysis_scores.award_score }}</li>
             <li><strong>Total Skor:</strong> {{ analysis_scores.total_score }}</li>
         </ul>
 
-        <a href="{{ url_for('cv_list') }}" class="btn btn-secondary">Kembali ke Daftar CV</a>
+        <a href="{{ url_for('analysis') }}" class="btn btn-secondary">Kembali ke Halaman Analisis</a>
     </main>
     <footer class="text-center py-3 mt-5">
         <p>&copy; 2024 - Analisis CV Otomatis</p>
