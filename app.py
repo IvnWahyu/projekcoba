@@ -192,8 +192,69 @@ def analyze_text(extracted_text, criteria):
     return f"Jumlah kata dalam teks: {word_count} kata"
 
 # Fungsi untuk menganalisis skor berdasarkan kriteria
+# def analyze_scores(extracted_text, criteria):
+#     # Logika analisis sederhana berdasarkan kriteria yang sudah disimpan
+#     education_score = 0
+#     experience_score = 0
+#     skills_score = 0
+#     language_score = 0
+#     certificate_score = 0
+#     award_score = 0
+
+#     # Skor Pendidikan
+#     if criteria[1] in extracted_text:  # criteria[1] berisi pendidikan yang dipilih (misalnya 'S1')
+#         education_score = 20  # Atur skor berdasarkan kecocokan
+
+#     # Skor Pengalaman
+#     if str(criteria[2]) in extracted_text:  # criteria[2] berisi pengalaman minimum (misalnya '3 tahun')
+#         experience_score = 20  # Skor jika ditemukan pengalaman yang sesuai
+
+#     # Skor Keterampilan (Menyesuaikan dengan keterampilan yang dipilih)
+#     skills_keywords = []
+#     if isinstance(criteria[3], str):  # Pastikan criteria[3] adalah string
+#         skills_keywords = criteria[3].split(",")  # Misalnya keterampilan yang dipilih adalah 'Python, Java'
+#     for skill in skills_keywords:
+#         if skill.strip().lower() in extracted_text.lower():
+#             skills_score += 5  # Beri skor per keterampilan yang cocok
+    
+#     # Skor Bahasa
+#     languages = criteria[4].split(",")  # Misalnya 'Bahasa Inggris, Bahasa Jepang'
+#     for language in languages:
+#         if language.strip().lower() in extracted_text.lower():
+#             language_score += 5  # Beri skor per bahasa yang cocok
+            
+#     #skor sertifikasi
+#     certificates = criteria[5].split(",")  # Misalnya 'Sertifikasi 1, Sertifikasi 2'
+#     for certificate in certificates:    
+#         if certificate.strip().lower() in extracted_text.lower():
+#             certificate_score += 10# Beri skor per sertifikasi yang cocok
+            
+    
+#     # Skor Penghargaan
+#     award = criteria[6].split(",")  # Misalnya 'Penghargaan 1, Penghargaan 2'
+#     for awards in award:
+#         if awards.strip().lower() in extracted_text.lower():
+#             award_score += 5  # Beri skor per penghargaan yang cocok
+
+
+#     # Total skor
+#     total_score = ((education_score + experience_score + skills_score + language_score + certificate_score + award_score) / 105) * 100
+    
+#     # Membulatkan ke dua angka desimal
+#     total_score = round(total_score, 2)
+
+
+#     return {
+#         'education_score': education_score,
+#         'experience_score': experience_score,
+#         'skills_score': skills_score,
+#         'language_score': language_score,
+#         'certificate_score': certificate_score,
+#         'award_score': award_score,
+#         'total_score': total_score
+#     }
+
 def analyze_scores(extracted_text, criteria):
-    # Logika analisis sederhana berdasarkan kriteria yang sudah disimpan
     education_score = 0
     experience_score = 0
     skills_score = 0
@@ -202,53 +263,87 @@ def analyze_scores(extracted_text, criteria):
     award_score = 0
 
     # Skor Pendidikan
-    if criteria[1] in extracted_text:  # criteria[1] berisi pendidikan yang dipilih (misalnya 'S1')
-        education_score = 20  # Atur skor berdasarkan kecocokan
+    if criteria[1] in extracted_text:
+        education_score = 20
 
     # Skor Pengalaman
-    if str(criteria[2]) in extracted_text:  # criteria[2] berisi pengalaman minimum (misalnya '3 tahun')
-        experience_score = 20  # Skor jika ditemukan pengalaman yang sesuai
+    if str(criteria[2]) in extracted_text:
+        experience_score = 20
 
-    # Skor Keterampilan (Menyesuaikan dengan keterampilan yang dipilih)
+    # Skor Keterampilan
     skills_keywords = []
-    if isinstance(criteria[3], str):  # Pastikan criteria[3] adalah string
-        skills_keywords = criteria[3].split(",")  # Misalnya keterampilan yang dipilih adalah 'Python, Java'
-    for skill in skills_keywords:
-        if skill.strip().lower() in extracted_text.lower():
-            skills_score += 5  # Beri skor per keterampilan yang cocok
-    
-    # Skor Bahasa
-    languages = criteria[4].split(",")  # Misalnya 'Bahasa Inggris, Bahasa Jepang'
-    for language in languages:
-        if language.strip().lower() in extracted_text.lower():
-            language_score += 5  # Beri skor per bahasa yang cocok
-            
-    #skor sertifikasi
-    certificates = criteria[5].split(",")  # Misalnya 'Sertifikasi 1, Sertifikasi 2'
-    for certificate in certificates:    
-        if certificate.strip().lower() in extracted_text.lower():
-            certificate_score += 10# Beri skor per sertifikasi yang cocok
-            
-    
-    # Skor Penghargaan
-    award = criteria[6].split(",")  # Misalnya 'Penghargaan 1, Penghargaan 2'
-    for awards in award:
-        if awards.strip().lower() in extracted_text.lower():
-            award_score += 5  # Beri skor per penghargaan yang cocok
+    if isinstance(criteria[3], str):
+        skills_keywords = [skill.strip().lower() for skill in criteria[3].split(",")]
 
+    matched_skills = 0
+    for skill in skills_keywords:
+        if skill in extracted_text.lower():
+            matched_skills += 1
+
+    if skills_keywords:
+        skills_score = (matched_skills / len(skills_keywords)) * 30
+    else:
+        skills_score = 0
+
+    # Skor Bahasa
+    languages_keywords = []
+    if isinstance(criteria[4], str):
+        languages_keywords = [lang.strip().lower() for lang in criteria[4].split(",")]
+
+    matched_languages = 0
+    for language in languages_keywords:
+        if language in extracted_text.lower():
+            matched_languages += 1
+
+    if languages_keywords:
+        language_score = (matched_languages / len(languages_keywords)) * 20
+    else:
+        language_score = 0
+
+    # Skor Sertifikasi
+    certificates_keywords = []
+    if isinstance(criteria[5], str):
+        certificates_keywords = [cert.strip().lower() for cert in criteria[5].split(",")]
+
+    matched_certificates = 0
+    for certificate in certificates_keywords:
+        if certificate in extracted_text.lower():
+            matched_certificates += 1
+
+    if certificates_keywords:
+        certificate_score = (matched_certificates / len(certificates_keywords)) * 25
+    else:
+        certificate_score = 0
+
+    # Skor Penghargaan
+    awards_keywords = []
+    if isinstance(criteria[6], str):
+        awards_keywords = [award.strip().lower() for award in criteria[6].split(",")]
+
+    matched_awards = 0
+    for award in awards_keywords:
+        if award in extracted_text.lower():
+            matched_awards += 1
+
+    if awards_keywords:
+        award_score = (matched_awards / len(awards_keywords)) * 10
+    else:
+        award_score = 0
 
     # Total skor
-    total_score = education_score + experience_score + skills_score + language_score+ certificate_score+ award_score
+    total_score = ((education_score + experience_score + skills_score + language_score + certificate_score + award_score) / 105) * 100
+    total_score = round(total_score, 2)
 
     return {
         'education_score': education_score,
         'experience_score': experience_score,
-        'skills_score': skills_score,
-        'language_score': language_score,
-        'certificate_score': certificate_score,
-        'award_score': award_score,
+        'skills_score': round(skills_score, 2),
+        'language_score': round(language_score, 2),
+        'certificate_score': round(certificate_score, 2),
+        'award_score': round(award_score, 2),
         'total_score': total_score
     }
+
     
 @app.route('/analyze_cv/<int:cv_id>', methods=['GET'])
 def analyze_cv(cv_id):
