@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <title>Rincian Kriteria - {{ criteria[1] }}</title>
+</head>
+<body>
+    <header class="bg-primary text-white text-center py-3">
+        <h1>Rincian Kriteria - {{ criteria[1] }}</h1>
+        <nav class="nav justify-content-center">
+            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
+            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
+            <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a>
+            <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
+            <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
+        </nav>
+    </header>
+
+    <main class="container mt-5">
+        <h2>Detail Kriteria</h2>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Posisi:</strong> {{ criteria[1] }}</li>
+            <li class="list-group-item"><strong>Pendidikan Minimum:</strong> {{ criteria[2] }}</li>
+            <li class="list-group-item"><strong>Pengalaman Minimum:</strong> {{ criteria[3] }} Tahun</li>
+            <li class="list-group-item"><strong>Keterampilan:</strong> {{ criteria[4] }}</li>
+            <li class="list-group-item"><strong>Bahasa:</strong> {{ criteria[5] }}</li>
+            <li class="list-group-item"><strong>Sertifikasi:</strong> {{ criteria[6] }}</li>
+            <li class="list-group-item"><strong>Penghargaan:</strong> {{ criteria[7] }}</li>
+        </ul>
+        <a href="{{ url_for('criteria_list') }}" class="btn btn-secondary mt-4">Kembali ke Daftar Kriteria</a>
+    </main>
+
+    <footer class="text-center py-3 mt-5">
+        <p>&copy; 2024 - Analisis CV Otomatis</p>
+    </footer>
+</body>
+</html>

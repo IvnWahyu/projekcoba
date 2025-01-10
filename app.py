@@ -192,67 +192,6 @@ def analyze_text(extracted_text, criteria):
     return f"Jumlah kata dalam teks: {word_count} kata"
 
 # Fungsi untuk menganalisis skor berdasarkan kriteria
-# def analyze_scores(extracted_text, criteria):
-#     # Logika analisis sederhana berdasarkan kriteria yang sudah disimpan
-#     education_score = 0
-#     experience_score = 0
-#     skills_score = 0
-#     language_score = 0
-#     certificate_score = 0
-#     award_score = 0
-
-#     # Skor Pendidikan
-#     if criteria[1] in extracted_text:  # criteria[1] berisi pendidikan yang dipilih (misalnya 'S1')
-#         education_score = 20  # Atur skor berdasarkan kecocokan
-
-#     # Skor Pengalaman
-#     if str(criteria[2]) in extracted_text:  # criteria[2] berisi pengalaman minimum (misalnya '3 tahun')
-#         experience_score = 20  # Skor jika ditemukan pengalaman yang sesuai
-
-#     # Skor Keterampilan (Menyesuaikan dengan keterampilan yang dipilih)
-#     skills_keywords = []
-#     if isinstance(criteria[3], str):  # Pastikan criteria[3] adalah string
-#         skills_keywords = criteria[3].split(",")  # Misalnya keterampilan yang dipilih adalah 'Python, Java'
-#     for skill in skills_keywords:
-#         if skill.strip().lower() in extracted_text.lower():
-#             skills_score += 5  # Beri skor per keterampilan yang cocok
-    
-#     # Skor Bahasa
-#     languages = criteria[4].split(",")  # Misalnya 'Bahasa Inggris, Bahasa Jepang'
-#     for language in languages:
-#         if language.strip().lower() in extracted_text.lower():
-#             language_score += 5  # Beri skor per bahasa yang cocok
-            
-#     #skor sertifikasi
-#     certificates = criteria[5].split(",")  # Misalnya 'Sertifikasi 1, Sertifikasi 2'
-#     for certificate in certificates:    
-#         if certificate.strip().lower() in extracted_text.lower():
-#             certificate_score += 10# Beri skor per sertifikasi yang cocok
-            
-    
-#     # Skor Penghargaan
-#     award = criteria[6].split(",")  # Misalnya 'Penghargaan 1, Penghargaan 2'
-#     for awards in award:
-#         if awards.strip().lower() in extracted_text.lower():
-#             award_score += 5  # Beri skor per penghargaan yang cocok
-
-
-#     # Total skor
-#     total_score = ((education_score + experience_score + skills_score + language_score + certificate_score + award_score) / 105) * 100
-    
-#     # Membulatkan ke dua angka desimal
-#     total_score = round(total_score, 2)
-
-
-#     return {
-#         'education_score': education_score,
-#         'experience_score': experience_score,
-#         'skills_score': skills_score,
-#         'language_score': language_score,
-#         'certificate_score': certificate_score,
-#         'award_score': award_score,
-#         'total_score': total_score
-#     }
 
 def analyze_scores(extracted_text, criteria):
     education_score = 0
@@ -372,6 +311,37 @@ def analyze_cv(cv_id):
     conn.close()
 
     return render_template('analyze_cv.html', cv=cv, analysis_result=analysis_result, analysis_scores=analysis_scores)
+
+@app.route('/view_extracted_text/<int:cv_id>', methods=['GET'])
+def view_extracted_text(cv_id):
+    # Ambil data CV berdasarkan id
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT filename, extracted_text FROM CVs WHERE id = %s", (cv_id,))
+    cv = cursor.fetchone()
+
+    if not cv:
+        flash('CV tidak ditemukan', 'error')
+        return redirect(url_for('cv_list'))  # Kembali ke daftar CV jika CV tidak ditemukan
+
+    conn.close()
+    return render_template('view_extracted_text.html', cv=cv)
+
+
+@app.route('/view_criteria/<int:criteria_id>', methods=['GET'])
+def view_criteria(criteria_id):
+    # Ambil data kriteria berdasarkan ID
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Kriteria_Penilaian WHERE id = %s", (criteria_id,))
+    criteria = cursor.fetchone()
+
+    if not criteria:
+        flash('Kriteria tidak ditemukan', 'error')
+        return redirect(url_for('criteria_list'))  # Kembali ke daftar kriteria jika kriteria tidak ditemukan
+
+    conn.close()
+    return render_template('view_criteria.html', criteria=criteria)
 
 
 # Menjalankan aplikasi
