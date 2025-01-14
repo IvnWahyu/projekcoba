@@ -29,7 +29,6 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ cv[1] }} <!-- Nama File CV -->
                         <div>
-                            <a href="{{ url_for('analyze_cv', cv_id=cv[0]) }}" class="btn btn-primary btn-sm">Analisis CV</a>
                             <a href="{{ url_for('view_extracted_text', cv_id=cv[0]) }}" class="btn btn-secondary btn-sm">Lihat Teks</a>
                         </div>
                     </li>
