@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 15 Jan 2025 pada 10.32
+-- Waktu pembuatan: 15 Jan 2025 pada 10.37
 -- Versi server: 10.4.27-MariaDB
 -- Versi PHP: 8.2.0
 
@@ -68,6 +68,27 @@ INSERT INTO `kriteria_penilaian` (`id`, `posisi`, `pendidikan_minimum`, `pengala
 (2, 'lkdsnf', 'sma', 3, 'werwe, gfhfdg', '5647, tyru7r5', 'retfgdyjt, 456yhjt,jm, uykyu567', 'uyjt67, ytu78o, 432514, 809yuikjyt'),
 (3, 'BackEnd Programmer', 's1', 3, 'PHP, Javascript, C', 'Bahasa Inggris, Bahasa Jepang', 'Toefl, JLPT', 'Juara PHP, Juara Javascript');
 
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `is_admin` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `is_admin`) VALUES
+(1, 'ivan', 'pbkdf2:sha256:600000$CAEmm9uwwrw0xnBM$962974dd252bb7d237f469affe3205d55204f0a2b0f0a519fd364b369a6ba446', 0),
+(2, 'admin', 'pbkdf2:sha256:600000$AMxTATqsrYxPuKOO$7fe54047aad083701f10dbb2fd86e9e81956a6fdd0586d32c5c522a19a758144', 1);
+
 --
 -- Indexes for dumped tables
 --
@@ -85,6 +106,13 @@ ALTER TABLE `kriteria_penilaian`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indeks untuk tabel `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
 -- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
@@ -99,6 +127,12 @@ ALTER TABLE `cvs`
 --
 ALTER TABLE `kriteria_penilaian`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT untuk tabel `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
