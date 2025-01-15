@@ -47,8 +47,9 @@
                 <label for="criteria_id">Pilih Kriteria Penilaian</label>
                 <select class="form-control" id="criteria_id" name="criteria_id" required>
                     <option value="">Pilih Kriteria Penilaian</option>
+                    <option value="all">Semua Kriteria</option> <!-- Tambahkan opsi ini -->
                     {% for criteria in criteria_positions %}
-                        <option value="{{ criteria[0] }}">{{ criteria[1] }}</option>  <!-- criteria[0] adalah ID, criteria[1] adalah posisi -->
+                        <option value="{{ criteria[0] }}">{{ criteria[1] }}</option>
                     {% endfor %}
                 </select>
             </div>

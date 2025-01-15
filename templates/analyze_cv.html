@@ -28,29 +28,30 @@
         <pre>{{ cv[2] }}</pre> <!-- Teks hasil ekstraksi -->
 
         <h4 class="mt-4">Hasil Analisis:</h4>
-        <p>{{ analysis_result }}</p> <!-- Menampilkan hasil analisis (misalnya, jumlah kata) -->
-
-        <h5>Skor Analisis:</h5>
-        <ul>
-            <li><strong>Skor Pendidikan:</strong> {{ analysis_scores.education_score }}</li>
-            <li><strong>Skor Pengalaman:</strong> {{ analysis_scores.experience_score }}</li>
-            <li><strong>Skor Keterampilan:</strong> {{ analysis_scores.skills_score }}</li>
-            <li><strong>Skor Bahasa:</strong> {{ analysis_scores.language_score }}</li>
-            <li><strong>Skor Sertifikat:</strong> {{ analysis_scores.certificate_score }}</li>
-            <li><strong>Skor Penghargaan:</strong> {{ analysis_scores.award_score }}</li>
-            <li><strong>Total Skor:</strong> {{ analysis_scores.total_score }}%</li>
-        </ul>
-
-        <!-- Tambahkan Kondisi untuk Menampilkan Kotak Hijau atau Merah -->
-        {% if analysis_scores.total_score >= 70 %}
-        <div class="alert alert-success text-center mt-4" role="alert">
-            <strong>Eligible</strong>
-        </div>
-        {% else %}
-        <div class="alert alert-danger text-center mt-4" role="alert">
-            <strong>Tidak Eligible</strong>
-        </div>
-        {% endif %}
+            {% for result, scores, criteria in zip(analysis_results, analysis_scores_list, selected_criteria_list) %}
+                <h5>Posisi: {{ criteria[1] }}</h5>
+                <p>{{ result }}</p>
+                <ul>
+                    <li><strong>Skor Pendidikan:</strong> {{ scores.education_score }}</li>
+                    <li><strong>Skor Pengalaman:</strong> {{ scores.experience_score }}</li>
+                    <li><strong>Skor Keterampilan:</strong> {{ scores.skills_score }}</li>
+                    <li><strong>Skor Bahasa:</strong> {{ scores.language_score }}</li>
+                    <li><strong>Skor Sertifikat:</strong> {{ scores.certificate_score }}</li>
+                    <li><strong>Skor Penghargaan:</strong> {{ scores.award_score }}</li>
+                    <li><strong>Total Skor:</strong> {{ scores.total_score }}%</li>
+                </ul>
+                {% if scores.total_score >= 70 %}
+                    <div class="alert alert-success text-center mt-4" role="alert">
+                        <strong>Eligible</strong>
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger text-center mt-4" role="alert">
+                        <strong>Tidak Eligible</strong>
+                    </div>
+                {% endif %}
+                <hr>
+            {% endfor %}
+        
 
         <a href="{{ url_for('analysis') }}" class="btn btn-secondary mt-4">Kembali ke Halaman Analisis</a>
     </main>
