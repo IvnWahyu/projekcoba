@@ -102,10 +102,20 @@ def logout():
 def index():
     conn = get_db_connection()
     cursor = conn.cursor()
+    
+    # Hitung jumlah CV yang diunggah
     cursor.execute("SELECT COUNT(*) FROM CVs")
     total_cvs = cursor.fetchone()[0]
+    
+    # Hitung jumlah pengguna jika admin login
+    total_users = None
+    if session.get('is_admin'):
+        cursor.execute("SELECT COUNT(*) FROM users")
+        total_users = cursor.fetchone()[0]
+
     conn.close()
-    return render_template('index.html', total_cvs=total_cvs)
+    
+    return render_template('index.html', total_cvs=total_cvs, total_users=total_users)
 
 # Halaman Pengaturan Kriteria
 @app.route('/criteria', methods=['GET', 'POST'])
@@ -213,52 +223,78 @@ def criteria_list():
 @app.route('/analysis', methods=['GET', 'POST'])
 @admin_required
 def analysis():
-    # Ambil semua CV dari database
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, filename FROM CVs")  # Ambil ID dan nama file dari CV yang diunggah
+    cursor.execute("SELECT id, filename FROM CVs")
     cvs = cursor.fetchall()
-
-    # Ambil semua kriteria penilaian (posisi) dari database
-    cursor.execute("SELECT id, posisi FROM Kriteria_Penilaian")  # Ambil semua posisi
+    cursor.execute("SELECT id, posisi FROM Kriteria_Penilaian")
     criteria_positions = cursor.fetchall()
     conn.close()
 
-    # Jika ada pilihan CV dan kriteria, lakukan analisis
-    analysis_result = None
-    analysis_scores = None
+    analysis_results = []
+    analysis_scores_list = []
+    selected_criteria_list = []
     cv_text = None
-    selected_criteria = None
 
     if request.method == 'POST':
         cv_id = request.form.get('cv_id')
-        criteria_id = request.form.get('criteria_id')  # Ambil ID kriteria yang dipilih
+        criteria_id = request.form.get('criteria_id')
 
-        if cv_id and criteria_id:
-            # Ambil CV dan kriteria yang dipilih
+        if cv_id:
             conn = get_db_connection()
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM CVs WHERE id = %s", (cv_id,))
             cv = cursor.fetchone()
-
-            cursor.execute("SELECT * FROM Kriteria_Penilaian WHERE id = %s", (criteria_id,))
-            criteria = cursor.fetchone()
             conn.close()
 
-            if not cv or not criteria:
-                flash('CV atau Kriteria tidak ditemukan', 'error')
+            if not cv:
+                flash('CV tidak ditemukan', 'error')
                 return redirect(url_for('analysis'))
 
-            # Ambil hasil analisis berdasarkan CV dan kriteria yang dipilih
-            analysis_result = analyze_text(cv[2], criteria)  # cv[2] berisi teks ekstraksi CV
-            analysis_scores = analyze_scores(cv[2], criteria)
-            cv_text = cv[2]  # Ambil teks ekstraksi CV
-            selected_criteria = criteria  # Menyimpan kriteria yang dipilih
+            cv_text = cv[2]  # Teks ekstraksi CV
 
-            return render_template('analyze_cv.html', cv=cv, analysis_result=analysis_result, 
-                                   analysis_scores=analysis_scores, selected_criteria=selected_criteria)
+            if criteria_id == "all":
+                conn = get_db_connection()
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM Kriteria_Penilaian")
+                all_criteria = cursor.fetchall()
+                conn.close()
+
+                for criteria in all_criteria:
+                    analysis_result = analyze_text(cv_text, criteria)
+                    analysis_scores = analyze_scores(cv_text, criteria)
+                    analysis_results.append(analysis_result)
+                    analysis_scores_list.append(analysis_scores)
+                    selected_criteria_list.append(criteria)
+            else:
+                conn = get_db_connection()
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM Kriteria_Penilaian WHERE id = %s", (criteria_id,))
+                criteria = cursor.fetchone()
+                conn.close()
+
+                if not criteria:
+                    flash('Kriteria tidak ditemukan', 'error')
+                    return redirect(url_for('analysis'))
+
+                analysis_result = analyze_text(cv_text, criteria)
+                analysis_scores = analyze_scores(cv_text, criteria)
+                analysis_results.append(analysis_result)
+                analysis_scores_list.append(analysis_scores)
+                selected_criteria_list.append(criteria)
+
+            # Kirim konteks bersama fungsi zip ke template
+            return render_template(
+                'analyze_cv.html', 
+                cv=cv, 
+                analysis_results=analysis_results,
+                analysis_scores_list=analysis_scores_list,
+                selected_criteria_list=selected_criteria_list,
+                zip=zip  # Tambahkan zip di sini
+            )
 
     return render_template('analysis.html', cvs=cvs, criteria_positions=criteria_positions)
+
 
 # Fungsi untuk menganalisis teks dan memberikan skor berdasarkan kriteria
 def analyze_text(extracted_text, criteria):

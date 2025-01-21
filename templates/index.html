@@ -29,9 +29,9 @@
             <p>Gunakan navigasi di atas untuk mengelola kriteria, mengunggah CV, dan menganalisis CV.</p>
         </div>
 
-        <!-- Statistik Ringkasan CV -->
+        <!-- Statistik Ringkasan -->
         <div class="row text-center mt-5">
-            <div class="col-md-4 offset-md-4">
+            <div class="col-md-4 offset-md-2">
                 <div class="card border-primary mb-3">
                     <div class="card-header">Total CV Diupload</div>
                     <div class="card-body">
@@ -39,6 +39,17 @@
                     </div>
                 </div>
             </div>
+            
+            {% if session.get('is_admin') %}
+            <div class="col-md-4">
+                <div class="card border-success mb-3">
+                    <div class="card-header">Total Pengguna Terdaftar</div>
+                    <div class="card-body">
+                        <h4 class="card-title">{{ total_users }}</h4>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
 
         <!-- Tombol Akses Cepat -->

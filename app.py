@@ -102,10 +102,20 @@ def logout():
 def index():
     conn = get_db_connection()
     cursor = conn.cursor()
+    
+    # Hitung jumlah CV yang diunggah
     cursor.execute("SELECT COUNT(*) FROM CVs")
     total_cvs = cursor.fetchone()[0]
+    
+    # Hitung jumlah pengguna jika admin login
+    total_users = None
+    if session.get('is_admin'):
+        cursor.execute("SELECT COUNT(*) FROM users")
+        total_users = cursor.fetchone()[0]
+
     conn.close()
-    return render_template('index.html', total_cvs=total_cvs)
+    
+    return render_template('index.html', total_cvs=total_cvs, total_users=total_users)
 
 # Halaman Pengaturan Kriteria
 @app.route('/criteria', methods=['GET', 'POST'])
