@@ -30,7 +30,12 @@
                 <h5 class="card-title">Username: {{ user['username'] }}</h5>
                 <p class="card-text"><strong>Role:</strong> {{ 'Admin' if user['is_admin'] else 'User' }}</p>
                 <p class="card-text"><strong>ID Pengguna:</strong> {{ user['id'] }}</p>
+                <p class="card-text"><strong>Waktu Pembuatan Akun:</strong> {{ user['created_at'] }}</p>
+                <p class="card-text"><strong>Login Terakhir:</strong> {{ user['last_login'] or 'Belum pernah login' }}</p>
             </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('user_list') }}" class="btn btn-secondary">Kembali ke Daftar Pengguna</a>
         </div>
     </main>
 

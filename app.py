@@ -55,17 +55,24 @@ def login():
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = cursor.fetchone()
-        conn.close()
 
         if user and check_password_hash(user['password'], password):
+            # Update waktu login terakhir
+            cursor.execute("UPDATE users SET last_login = NOW() WHERE id = %s", (user['id'],))
+            conn.commit()
+            conn.close()
+
+            # Set sesi login
             session['user_id'] = user['id']
             session['username'] = user['username']
             session['is_admin'] = user['is_admin']
             flash('Login berhasil!', 'success')
             return redirect(url_for('index'))
         else:
+            conn.close()
             flash('Username atau password salah.', 'error')
     return render_template('login.html')
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -101,21 +108,27 @@ def logout():
 @login_required
 def index():
     conn = get_db_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
     
     # Hitung jumlah CV yang diunggah
-    cursor.execute("SELECT COUNT(*) FROM CVs")
-    total_cvs = cursor.fetchone()[0]
+    cursor.execute("SELECT COUNT(*) AS total_cvs FROM CVs")
+    total_cvs = cursor.fetchone()['total_cvs']
     
     # Hitung jumlah pengguna jika admin login
     total_users = None
+    user_data = None
     if session.get('is_admin'):
-        cursor.execute("SELECT COUNT(*) FROM users")
-        total_users = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) AS total_users FROM users")
+        total_users = cursor.fetchone()['total_users']
+    else:
+        # Ambil data pengguna untuk pengguna biasa
+        cursor.execute("SELECT created_at, last_login FROM users WHERE id = %s", (session['user_id'],))
+        user_data = cursor.fetchone()
 
     conn.close()
     
-    return render_template('index.html', total_cvs=total_cvs, total_users=total_users)
+    return render_template('index.html', total_cvs=total_cvs, total_users=total_users, user_data=user_data)
+
 
 # Halaman Pengaturan Kriteria
 @app.route('/criteria', methods=['GET', 'POST'])
@@ -457,13 +470,14 @@ def view_criteria(criteria_id):
 @app.route('/user_list')
 @admin_required
 def user_list():
-    # Ambil semua pengguna dari database
+    # Ambil semua pengguna dari database termasuk created_at dan last_login
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, username, is_admin FROM users")
+    cursor.execute("SELECT id, username, is_admin, created_at, last_login FROM users")
     users = cursor.fetchall()
     conn.close()
     return render_template('user_list.html', users=users)
+
 
 
 @app.route('/delete_user/<int:user_id>', methods=['POST'])
@@ -484,7 +498,7 @@ def user_detail(user_id):
     # Ambil detail pengguna berdasarkan ID
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, username, is_admin FROM users WHERE id = %s", (user_id,))
+    cursor.execute("SELECT id, username, is_admin, created_at, last_login FROM users WHERE id = %s", (user_id,))
     user = cursor.fetchone()
     conn.close()
 

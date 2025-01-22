@@ -42,11 +42,23 @@
             </div>
             
             {% if session.get('is_admin') %}
+            <!-- Statistik untuk Admin -->
             <div class="col-md-4">
                 <div class="card border-success mb-3">
                     <div class="card-header">Total Pengguna Terdaftar</div>
                     <div class="card-body">
                         <h4 class="card-title">{{ total_users }}</h4>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Informasi Akun untuk Pengguna Biasa -->
+            <div class="col-md-4">
+                <div class="card border-info mb-3">
+                    <div class="card-header">Informasi Akun</div>
+                    <div class="card-body">
+                        <p><strong>Waktu Pembuatan Akun:</strong> {{ user_data['created_at'] }}</p>
+                        <p><strong>Login Terakhir:</strong> {{ user_data['last_login'] or 'Belum ada data login terakhir' }}</p>
                     </div>
                 </div>
             </div>
