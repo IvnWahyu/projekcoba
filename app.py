@@ -454,6 +454,47 @@ def view_criteria(criteria_id):
     conn.close()
     return render_template('view_criteria.html', criteria=criteria)
 
+@app.route('/user_list')
+@admin_required
+def user_list():
+    # Ambil semua pengguna dari database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, username, is_admin FROM users")
+    users = cursor.fetchall()
+    conn.close()
+    return render_template('user_list.html', users=users)
+
+
+@app.route('/delete_user/<int:user_id>', methods=['POST'])
+@admin_required
+def delete_user(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM users WHERE id = %s", (user_id,))
+    conn.commit()
+    conn.close()
+    flash('Pengguna berhasil dihapus.', 'success')
+    return redirect(url_for('user_list'))
+
+
+@app.route('/user_detail/<int:user_id>')
+@admin_required
+def user_detail(user_id):
+    # Ambil detail pengguna berdasarkan ID
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT id, username, is_admin FROM users WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+    conn.close()
+
+    if not user:
+        flash('Pengguna tidak ditemukan.', 'error')
+        return redirect(url_for('user_list'))
+
+    return render_template('user_detail.html', user=user)
+
+
 
 # Menjalankan aplikasi
 if __name__ == '__main__':
