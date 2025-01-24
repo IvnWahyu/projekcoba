@@ -508,6 +508,99 @@ def user_detail(user_id):
 
     return render_template('user_detail.html', user=user)
 
+@app.route('/delete_cv/<int:cv_id>', methods=['POST'])
+@admin_required
+def delete_cv(cv_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM CVs WHERE id = %s", (cv_id,))
+        conn.commit()
+        flash('CV berhasil dihapus.', 'success')
+    except Exception as e:
+        flash(f'Terjadi kesalahan: {str(e)}', 'error')
+    finally:
+        conn.close()
+    return redirect(url_for('cv_list'))
+
+@app.route('/delete_criteria/<int:criteria_id>', methods=['POST'])
+@admin_required
+def delete_criteria(criteria_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM Kriteria_Penilaian WHERE id = %s", (criteria_id,))
+        conn.commit()
+        flash('Kriteria berhasil dihapus.', 'success')
+    except Exception as e:
+        flash(f'Terjadi kesalahan: {str(e)}', 'error')
+    finally:
+        conn.close()
+    return redirect(url_for('criteria_list'))
+
+@app.route('/save_analysis/<int:cv_id>/<int:criteria_id>', methods=['POST'])
+@admin_required
+def save_analysis(cv_id, criteria_id):
+    # Ambil hasil analisis dari form
+    analysis_result = request.form.get('analysis_result')
+    total_score = float(request.form.get('total_score'))
+    eligibility = total_score >= 70  # Set 'eligible' jika skor >= 70
+
+    # Simpan ke database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            INSERT INTO Analysis_Results (cv_id, criteria_id, analysis_result, total_score, eligibility)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (cv_id, criteria_id, analysis_result, total_score, eligibility))
+        conn.commit()
+        flash('Hasil analisis berhasil disimpan.', 'success')
+    except Exception as e:
+        flash(f'Terjadi kesalahan: {str(e)}', 'error')
+    finally:
+        conn.close()
+
+    return redirect(url_for('analysis'))
+
+@app.route('/analysis_results')
+@admin_required
+def analysis_results():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT ar.id, cv.filename, kp.posisi, ar.total_score, ar.eligibility, ar.created_at
+        FROM Analysis_Results ar
+        JOIN CVs cv ON ar.cv_id = cv.id
+        JOIN Kriteria_Penilaian kp ON ar.criteria_id = kp.id
+        ORDER BY ar.created_at DESC
+    """)
+    results = cursor.fetchall()
+    conn.close()
+
+    return render_template('analysis_results.html', results=results)
+
+@app.route('/analysis_result_detail/<int:result_id>')
+@admin_required
+def analysis_result_detail(result_id):
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT ar.*, cv.filename, kp.posisi
+        FROM Analysis_Results ar
+        JOIN CVs cv ON ar.cv_id = cv.id
+        JOIN Kriteria_Penilaian kp ON ar.criteria_id = kp.id
+        WHERE ar.id = %s
+    """, (result_id,))
+    result = cursor.fetchone()
+    conn.close()
+
+    if not result:
+        flash('Hasil analisis tidak ditemukan.', 'error')
+        return redirect(url_for('analysis_results'))
+
+    return render_template('analysis_result_detail.html', result=result)
+
 
 
 # Menjalankan aplikasi
