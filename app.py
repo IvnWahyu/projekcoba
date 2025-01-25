@@ -601,6 +601,21 @@ def analysis_result_detail(result_id):
 
     return render_template('analysis_result_detail.html', result=result)
 
+@app.route('/delete_analysis_result/<int:result_id>', methods=['POST'])
+@admin_required
+def delete_analysis_result(result_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM Analysis_Results WHERE id = %s", (result_id,))
+        conn.commit()
+        flash('Hasil analisis berhasil dihapus.', 'success')
+    except Exception as e:
+        flash(f'Terjadi kesalahan: {str(e)}', 'error')
+    finally:
+        conn.close()
+    return redirect(url_for('analysis_results'))
+
 
 
 # Menjalankan aplikasi

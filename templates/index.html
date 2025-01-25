@@ -4,8 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
     <title>Dashboard</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .jumbotron {
+            background: linear-gradient(to right, #007bff, #6610f2);
+            color: white;
+            padding: 2rem;
+        }
+    </style>
 </head>
 <body>
     <header class="bg-primary text-white text-center py-3">
@@ -27,43 +48,58 @@
 
     <main class="container mt-5">
         <div class="jumbotron text-center">
-            <h2>Selamat Datang, {{ session['username'] }}</h2>
-            <p>Gunakan navigasi di atas untuk mengelola kriteria, mengunggah CV, dan menganalisis CV.</p>
+            <h2 class="mb-3">Selamat Datang, <strong>{{ session['username'] }}</strong></h2>
+            <p class="lead">Gunakan navigasi di atas untuk mengelola kriteria, mengunggah CV, dan menganalisis CV.</p>
+            <a href="#stats" class="btn btn-light mt-3">Lihat Statistik</a>
         </div>
 
         <!-- Statistik Ringkasan -->
-        <div class="row text-center mt-5">
-            <div class="col-md-4 offset-md-2">
-                <div class="card border-primary mb-3">
-                    <div class="card-header">Total CV Diupload</div>
+        <div class="row text-center mt-5" id="stats">
+            <div class="col-md-6">
+                <div class="card border-primary mb-4">
                     <div class="card-body">
-                        <h4 class="card-title">{{ total_cvs }}</h4>
+                        <h5 class="card-title">Total CV Diupload</h5>
+                        <i class="fas fa-file-alt fa-3x text-primary"></i>
+                        <h4 class="card-text mt-2">{{ total_cvs }}</h4>
                     </div>
                 </div>
             </div>
-            
+
             {% if session.get('is_admin') %}
             <!-- Statistik untuk Admin -->
-            <div class="col-md-4">
-                <div class="card border-success mb-3">
-                    <div class="card-header">Total Pengguna Terdaftar</div>
+            <div class="col-md-6">
+                <div class="card border-success mb-4">
                     <div class="card-body">
-                        <h4 class="card-title">{{ total_users }}</h4>
+                        <h5 class="card-title">Total Pengguna</h5>
+                        <i class="fas fa-users fa-3x text-success"></i>
+                        <h4 class="card-text mt-2">{{ total_users }}</h4>
                     </div>
                 </div>
             </div>
             {% else %}
             <!-- Informasi Akun untuk Pengguna Biasa -->
-            <div class="col-md-4">
-                <div class="card border-info mb-3">
-                    <div class="card-header">Informasi Akun</div>
+            <div class="col-md-6">
+                <div class="card border-info mb-4">
                     <div class="card-body">
-                        <p><strong>Waktu Pembuatan Akun:</strong> {{ user_data['created_at'] }}</p>
+                        <h5 class="card-title">Informasi Akun</h5>
+                        <p><strong>Waktu Pembuatan:</strong> {{ user_data['created_at'] }}</p>
                         <p><strong>Login Terakhir:</strong> {{ user_data['last_login'] or 'Belum ada data login terakhir' }}</p>
                     </div>
                 </div>
             </div>
             {% endif %}
+        </div>
+
+        <!-- Chart Statistik -->
+        <div class="row mt-5">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Statistik Aktivitas</h5>
+                        <canvas id="statsChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Tombol Akses Cepat -->
@@ -77,8 +113,37 @@
             {% endif %}
         </div>
     </main>
-    <footer class="text-center py-3 mt-5">
+
+    <footer class="text-center py-3 mt-5 bg-light">
         <p>&copy; 2024 - Analisis CV Otomatis</p>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('statsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['CV Diupload', 'Pengguna Terdaftar'],
+                    datasets: [{
+                        label: 'Jumlah',
+                        data: [{{ total_cvs }}, {{ total_users if session.get('is_admin') else 0 }}],
+                        backgroundColor: ['#007bff', '#28a745'],
+                        borderColor: ['#0056b3', '#1c7430'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

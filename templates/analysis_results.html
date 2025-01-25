@@ -11,7 +11,15 @@
         <h1>Daftar Hasil Analisis</h1>
         <nav class="nav justify-content-center">
             <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
-            <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
+            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
+            {% if session.get('is_admin') %}
+                <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+                <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a>
+                <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
+                <a class="nav-link text-white" href="{{ url_for('user_list') }}">Daftar Pengguna</a>
+                <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
+                <a class="nav-link text-white" href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
+            {% endif %}
             <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
         </nav>
     </header>
@@ -42,6 +50,9 @@
                         <td>{{ result[5] }}</td>
                         <td>
                             <a href="{{ url_for('analysis_result_detail', result_id=result[0]) }}" class="btn btn-info btn-sm">Detail</a>
+                            <form method="POST" action="{{ url_for('delete_analysis_result', result_id=result[0]) }}" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus hasil analisis ini?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}
