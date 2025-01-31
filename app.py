@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import mysql.connector
 import os
 import pdfplumber
+import re
+import dateparser
+from datetime import datetime
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -202,8 +205,8 @@ def upload():
 def extract_text_from_pdf(filepath):
     with pdfplumber.open(filepath) as pdf:
         text = ''
-        for page in pdf.pages:
-            text += page.extract_text()
+        for page in pdf.pages:  # Loop melalui semua halaman
+            text += page.extract_text()  # Tambahkan teks dari setiap halaman
     return text
 
 # Halaman Daftar CV yang Telah Diunggah
@@ -315,6 +318,31 @@ def analyze_text(extracted_text, criteria):
     word_count = len(extracted_text.split())
     return f"Jumlah kata dalam teks: {word_count} kata"
 
+def extract_experience_duration(extracted_text):
+    # Regex untuk mengekstrak durasi pengalaman kerja
+    date_pattern = r"(\d{1,2}\s*(tahun|thn|bulan|bln))|(\d{1,2}/\d{4}\s*-\s*\d{1,2}/\d{4})"
+    matches = re.findall(date_pattern, extracted_text)
+    
+    total_duration_years = 0
+
+    for match in matches:
+        if match[0]:  # Format durasi langsung (misalnya, "2 tahun 6 bulan")
+            duration = match[0]
+            if "tahun" in duration or "thn" in duration:
+                years = int(re.search(r'\d+', duration).group())
+                total_duration_years += years
+            elif "bulan" in duration or "bln" in duration:
+                months = int(re.search(r'\d+', duration).group())
+                total_duration_years += months / 12
+        elif match[2]:  # Format MM/YYYY - MM/YYYY (misalnya, "10/2023 - 05/2024")
+            start_date_str, end_date_str = match[2].split('-')
+            start_date = dateparser.parse(start_date_str.strip(), date_formats=['%m/%Y'])
+            end_date = dateparser.parse(end_date_str.strip(), date_formats=['%m/%Y'])
+            if start_date and end_date:
+                duration_days = (end_date - start_date).days
+                total_duration_years += duration_days / 365
+
+    return round(total_duration_years, 2)
 # Fungsi untuk menganalisis skor berdasarkan kriteria
 
 def analyze_scores(extracted_text, criteria):
@@ -330,13 +358,17 @@ def analyze_scores(extracted_text, criteria):
         education_score = 20
 
     # Skor Pengalaman
-    if str(criteria[2]) in extracted_text:
+    experience_duration = extract_experience_duration(extracted_text)
+    required_experience = int(criteria[3])  # Kriteria pengalaman minimum (dalam tahun)
+    if experience_duration >= required_experience:
         experience_score = 20
+    else:
+        experience_score = (experience_duration / required_experience) * 20
 
     # Skor Keterampilan
     skills_keywords = []
-    if isinstance(criteria[3], str):
-        skills_keywords = [skill.strip().lower() for skill in criteria[3].split(",")]
+    if isinstance(criteria[4], str):
+        skills_keywords = [skill.strip().lower() for skill in criteria[4].split(",")]
 
     matched_skills = 0
     for skill in skills_keywords:
@@ -350,8 +382,8 @@ def analyze_scores(extracted_text, criteria):
 
     # Skor Bahasa
     languages_keywords = []
-    if isinstance(criteria[4], str):
-        languages_keywords = [lang.strip().lower() for lang in criteria[4].split(",")]
+    if isinstance(criteria[5], str):
+        languages_keywords = [lang.strip().lower() for lang in criteria[5].split(",")]
 
     matched_languages = 0
     for language in languages_keywords:
@@ -365,8 +397,8 @@ def analyze_scores(extracted_text, criteria):
 
     # Skor Sertifikasi
     certificates_keywords = []
-    if isinstance(criteria[5], str):
-        certificates_keywords = [cert.strip().lower() for cert in criteria[5].split(",")]
+    if isinstance(criteria[6], str):
+        certificates_keywords = [cert.strip().lower() for cert in criteria[6].split(",")]
 
     matched_certificates = 0
     for certificate in certificates_keywords:
@@ -380,8 +412,8 @@ def analyze_scores(extracted_text, criteria):
 
     # Skor Penghargaan
     awards_keywords = []
-    if isinstance(criteria[6], str):
-        awards_keywords = [award.strip().lower() for award in criteria[6].split(",")]
+    if isinstance(criteria[7], str):
+        awards_keywords = [award.strip().lower() for award in criteria[7].split(",")]
 
     matched_awards = 0
     for award in awards_keywords:
@@ -400,6 +432,7 @@ def analyze_scores(extracted_text, criteria):
     return {
         'education_score': education_score,
         'experience_score': experience_score,
+        'experience_duration': experience_duration,  # Tambahkan durasi pengalaman
         'skills_score': round(skills_score, 2),
         'language_score': round(language_score, 2),
         'certificate_score': round(certificate_score, 2),
