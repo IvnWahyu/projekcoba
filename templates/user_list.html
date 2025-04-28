@@ -4,66 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <title>Daftar Pengguna</title>
 </head>
 <body>
-    <header class="bg-primary text-white text-center py-3">
-        <h1>Daftar Pengguna</h1>
-        <nav class="nav justify-content-center">
-            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
-            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
-            {% if session.get('is_admin') %}
-                <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a>
-                <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('user_list') }}">Daftar Pengguna</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
-            {% endif %}
-            <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
-        </nav>
-    </header>
-
-    <main class="container mt-5">
-        <h2 class="text-center mb-4">Daftar Pengguna Terdaftar</h2>
-
-        {% if users %}
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th>Waktu Pembuatan Akun</th>
-                    <th>Login Terakhir</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user[0] }}</td>
-                    <td>{{ user[1] }}</td>
-                    <td>{{ 'Admin' if user[2] else 'User' }}</td>
-                    <td>{{ user[3] }}</td>
-                    <td>{{ user[4] or 'Belum pernah login' }}</td>
-                    <td>
-                        <a href="{{ url_for('user_detail', user_id=user[0]) }}" class="btn btn-info btn-sm">Detail</a>
-                        <form method="POST" action="{{ url_for('delete_user', user_id=user[0]) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?');">
-                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <div class="alert alert-warning text-center">Tidak ada pengguna yang terdaftar.</div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-center">Menu</h2>
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <a href="{{ url_for('upload') }}">Unggah CV</a>
+        {% if session.get('is_admin') %}
+            <a href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a href="{{ url_for('cv_list') }}">Daftar CV</a>
+            <a href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
+            <a href="{{ url_for('user_list') }}">Daftar Pengguna</a>
+            <a href="{{ url_for('analysis') }}">Analisis CV</a>
+            <a href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
         {% endif %}
-    </main>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
 
-    <footer class="text-center py-3 mt-5">
-        <p>&copy; 2024 - Analisis CV Otomatis</p>
-    </footer>
+    <!-- Content Section -->
+    <div class="content">
+        <!-- Main Content -->
+        <main class="container mt-3">
+            <div class="jumbotron text-center">
+                <h2 class="mb-3 fadeIn">Daftar Pengguna Terdaftar</h2>
+                <p class="lead">Berikut adalah daftar pengguna yang terdaftar dalam sistem. Anda dapat melihat detail dan menghapus pengguna jika diperlukan.</p>
+            </div>
+
+            {% if users %}
+            <table class="table table-bordered table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Waktu Pembuatan Akun</th>
+                        <th>Login Terakhir</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user[0] }}</td>
+                        <td>{{ user[1] }}</td>
+                        <td>{{ 'Admin' if user[2] else 'User' }}</td>
+                        <td>{{ user[3] }}</td>
+                        <td>{{ user[4] or 'Belum pernah login' }}</td>
+                        <td>
+                            <a href="{{ url_for('user_detail', user_id=user[0]) }}" class="btn btn-info btn-sm">Detail</a>
+                            <form method="POST" action="{{ url_for('delete_user', user_id=user[0]) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="alert alert-warning text-center">Tidak ada pengguna yang terdaftar.</div>
+            {% endif %}
+        </main>
+
+        <footer class="text-center py-3 mt-5">
+            <p>&copy; 2024 - Analisis CV Otomatis</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

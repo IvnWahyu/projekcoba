@@ -4,44 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <title>Detail Pengguna</title>
 </head>
 <body>
-    <header class="bg-primary text-white text-center py-3">
-        <h1>Detail Pengguna</h1>
-        <nav class="nav justify-content-center">
-            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
-            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
-            {% if session.get('is_admin') %}
-                <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a>
-                <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('user_list') }}">Daftar Pengguna</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
-            {% endif %}
-            <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
-        </nav>
-    </header>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-center">Menu</h2>
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <a href="{{ url_for('upload') }}">Unggah CV</a>
+        {% if session.get('is_admin') %}
+            <a href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a href="{{ url_for('cv_list') }}">Daftar CV</a>
+            <a href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
+            <a href="{{ url_for('user_list') }}">Daftar Pengguna</a>
+            <a href="{{ url_for('analysis') }}">Analisis CV</a>
+            <a href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
 
-    <main class="container mt-5">
-        <h2 class="text-center mb-4">Detail Pengguna</h2>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Username: {{ user['username'] }}</h5>
-                <p class="card-text"><strong>Role:</strong> {{ 'Admin' if user['is_admin'] else 'User' }}</p>
-                <p class="card-text"><strong>ID Pengguna:</strong> {{ user['id'] }}</p>
-                <p class="card-text"><strong>Waktu Pembuatan Akun:</strong> {{ user['created_at'] }}</p>
-                <p class="card-text"><strong>Login Terakhir:</strong> {{ user['last_login'] or 'Belum pernah login' }}</p>
+    <!-- Content Section -->
+    <div class="content">
+        <!-- Main Content -->
+        <main class="container mt-3">
+            <div class="jumbotron text-center">
+                <h2 class="mb-3 fadeIn">Detail Pengguna - {{ user['username'] }}</h2>
+                <p class="lead">Berikut adalah informasi lengkap mengenai pengguna yang terpilih. Anda dapat melihat detail akun dan status terakhir login mereka.</p>
             </div>
-        </div>
-        <div class="text-center mt-4">
-            <a href="{{ url_for('user_list') }}" class="btn btn-secondary">Kembali ke Daftar Pengguna</a>
-        </div>
-    </main>
 
-    <footer class="text-center py-3 mt-5">
-        <p>&copy; 2024 - Analisis CV Otomatis</p>
-    </footer>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Username: {{ user['username'] }}</h5>
+                    <p class="card-text"><strong>Role:</strong> {{ 'Admin' if user['is_admin'] else 'User' }}</p>
+                    <p class="card-text"><strong>ID Pengguna:</strong> {{ user['id'] }}</p>
+                    <p class="card-text"><strong>Waktu Pembuatan Akun:</strong> {{ user['created_at'] }}</p>
+                    <p class="card-text"><strong>Login Terakhir:</strong> {{ user['last_login'] or 'Belum pernah login' }}</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{{ url_for('user_list') }}" class="btn btn-secondary">Kembali ke Daftar Pengguna</a>
+            </div>
+        </main>
+
+        <footer class="text-center py-3 mt-5">
+            <p>&copy; 2024 - Analisis CV Otomatis</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

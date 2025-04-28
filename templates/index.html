@@ -8,115 +8,101 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <title>Dashboard</title>
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            transition: transform 0.2s ease-in-out;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        .jumbotron {
-            background: linear-gradient(to right, #007bff, #6610f2);
-            color: white;
-            padding: 2rem;
-        }
-    </style>
 </head>
 <body>
-    <header class="bg-primary text-white text-center py-3">
-        <h1>Dashboard Analisis CV Otomatis</h1>
-        <nav class="nav justify-content-center">
-            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
-            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
-            {% if session.get('is_admin') %}
-                <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a>
-                <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('user_list') }}">Daftar Pengguna</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
-            {% endif %}
-            <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
-        </nav>
-    </header>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-center">Menu</h2>
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <a href="{{ url_for('upload') }}">Unggah CV</a>
+        {% if session.get('is_admin') %}
+            <a href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a href="{{ url_for('cv_list') }}">Daftar CV</a>
+            <a href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
+            <a href="{{ url_for('user_list') }}">Daftar Pengguna</a>
+            <a href="{{ url_for('analysis') }}">Analisis CV</a>
+            <a href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
 
-    <main class="container mt-5">
-        <div class="jumbotron text-center">
-            <h2 class="mb-3">Selamat Datang, <strong>{{ session['username'] }}</strong></h2>
-            <p class="lead">Gunakan navigasi di atas untuk mengelola kriteria, mengunggah CV, dan menganalisis CV.</p>
-            <a href="#stats" class="btn btn-light mt-3">Lihat Statistik</a>
-        </div>
+    <!-- Content Section -->
+    <div class="content">
+        <!-- Main Content -->
+        <main class="container mt-3">
+            <div class="jumbotron text-center">
+                <h2 class="mb-3 fadeIn">Selamat Datang, <strong>{{ session['username'] }}</strong></h2>
+                <p class="lead">Gunakan navigasi di sebelah kiri untuk mengelola kriteria, mengunggah CV, dan menganalisis CV.</p>
+                <a href="#stats" class="btn btn-light mt-3">Lihat Statistik</a>
+            </div>
 
-        <!-- Statistik Ringkasan -->
-        <div class="row text-center mt-5" id="stats">
-            <div class="col-md-6">
-                <div class="card border-primary mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Total CV Diupload</h5>
-                        <i class="fas fa-file-alt fa-3x text-primary"></i>
-                        <h4 class="card-text mt-2">{{ total_cvs }}</h4>
+            <!-- Statistik Ringkasan -->
+            <div class="row text-center mt-5" id="stats">
+                <div class="col-md-4">
+                    <div class="card border-primary mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Total CV Diupload</h5>
+                            <i class="fas fa-file-alt fa-3x text-primary"></i>
+                            <h4 class="card-text mt-2">{{ total_cvs }}</h4>
+                        </div>
+                    </div>
+                </div>
+
+                {% if session.get('is_admin') %}
+                <!-- Statistik untuk Admin -->
+                <div class="col-md-4">
+                    <div class="card border-success mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Pengguna</h5>
+                            <i class="fas fa-users fa-3x text-success"></i>
+                            <h4 class="card-text mt-2">{{ total_users }}</h4>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <!-- Informasi Akun untuk Pengguna Biasa -->
+                <div class="col-md-4">
+                    <div class="card border-info mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Informasi Akun</h5>
+                            <p><strong>Waktu Pembuatan:</strong> {{ user_data['created_at'] }}</p>
+                            <p><strong>Login Terakhir:</strong> {{ user_data['last_login'] or 'Belum ada data login terakhir' }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Chart Statistik -->
+            <div class="row mt-5">
+                <div class="col-md-8 offset-md-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Statistik Aktivitas</h5>
+                            <canvas id="statsChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {% if session.get('is_admin') %}
-            <!-- Statistik untuk Admin -->
-            <div class="col-md-6">
-                <div class="card border-success mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Total Pengguna</h5>
-                        <i class="fas fa-users fa-3x text-success"></i>
-                        <h4 class="card-text mt-2">{{ total_users }}</h4>
-                    </div>
-                </div>
+            <!-- Tombol Akses Cepat -->
+            <div class="text-center mt-4">
+                {% if session.get('is_admin') %}
+                    <a href="{{ url_for('criteria') }}" class="btn btn-primary mr-3">Tambah Kriteria Baru</a>
+                    <a href="{{ url_for('upload') }}" class="btn btn-success mr-3">Unggah CV Sekarang</a>
+                    <a href="{{ url_for('analysis') }}" class="btn btn-info">Analisis CV</a>
+                {% else %}
+                    <a href="{{ url_for('upload') }}" class="btn btn-success mr-3">Unggah CV Sekarang</a>
+                {% endif %}
             </div>
-            {% else %}
-            <!-- Informasi Akun untuk Pengguna Biasa -->
-            <div class="col-md-6">
-                <div class="card border-info mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Informasi Akun</h5>
-                        <p><strong>Waktu Pembuatan:</strong> {{ user_data['created_at'] }}</p>
-                        <p><strong>Login Terakhir:</strong> {{ user_data['last_login'] or 'Belum ada data login terakhir' }}</p>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        </div>
+        </main>
 
-        <!-- Chart Statistik -->
-        <div class="row mt-5">
-            <div class="col-md-8 offset-md-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Statistik Aktivitas</h5>
-                        <canvas id="statsChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tombol Akses Cepat -->
-        <div class="text-center mt-4">
-            {% if session.get('is_admin') %}
-                <a href="{{ url_for('criteria') }}" class="btn btn-primary">Tambah Kriteria Baru</a>
-                <a href="{{ url_for('upload') }}" class="btn btn-success">Unggah CV Sekarang</a>
-                <a href="{{ url_for('analysis') }}" class="btn btn-info">Analisis CV</a>
-            {% else %}
-                <a href="{{ url_for('upload') }}" class="btn btn-success">Unggah CV Sekarang</a>
-            {% endif %}
-        </div>
-    </main>
-
-    <footer class="text-center py-3 mt-5 bg-light">
-        <p>&copy; 2024 - Analisis CV Otomatis</p>
-    </footer>
+        <footer class="text-center py-3 mt-5">
+            <p>&copy; 2024 - Analisis CV Otomatis</p>
+        </footer>
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

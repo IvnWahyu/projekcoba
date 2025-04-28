@@ -4,49 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
-    <title>Unggah CV dan Ekstraksi Teks</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+    <title>Dashboard</title>
 </head>
 <body>
-    <header class="bg-primary text-white text-center py-3">
-        <h1>Unggah CV dan Ekstraksi Teks</h1>
-        <nav class="nav justify-content-center">
-            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
-            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
-            {% if session.get('is_admin') %}
-                <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a>
-                <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('user_list') }}">Daftar Pengguna</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
-            {% endif %}
-            <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
-        </nav>
-    </header>
-    <main class="container mt-5">
-        <h2>Unggah CV</h2>
-        <form method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="cv">Pilih File CV (PDF):</label>
-                <input type="file" id="cv" name="cv" class="form-control-file" accept=".pdf" required>
-                <small class="form-text text-muted">Max size: 5 MB</small>
-            </div>
-            <button type="submit" class="btn btn-primary">Unggah dan Ekstrak CV</button>
-        </form>
-
-        {% if extracted_text %}
-            <div class="extracted-text-container">
-                <h4 class="extracted-text-header text-center">Hasil Ekstraksi Teks:</h4>
-                <div class="card-body">
-                    <pre>{{ extracted_text }}</pre>
-                </div>
-            </div>
-            <a href="{{ url_for('upload') }}" class="btn btn-secondary btn-back">Kembali</a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-center">Menu</h2>
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <a href="{{ url_for('upload') }}">Unggah CV</a>
+        {% if session.get('is_admin') %}
+            <a href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a href="{{ url_for('cv_list') }}">Daftar CV</a>
+            <a href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
+            <a href="{{ url_for('user_list') }}">Daftar Pengguna</a>
+            <a href="{{ url_for('analysis') }}">Analisis CV</a>
+            <a href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
         {% endif %}
-    </main>
-    <footer class="text-center py-3 mt-5">
-        <p>&copy; 2024 - Analisis CV Otomatis</p>
-    </footer>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+        <main class="container mt-3">
+            <div class="jumbotron text-center ">
+                <h2 class="mb-3 fadeIn">Unggah CV dan Ekstraksi Teks</h2>
+                <p class="lead">Di halaman ini, Anda dapat mengunggah CV dalam format PDF. Sistem kami akan mengekstrak informasi penting dari CV Anda, seperti pengalaman kerja, pendidikan, keterampilan, dan banyak lagi, untuk memudahkan proses seleksi dan analisis kandidat secara otomatis dan efisien.</p>
+                
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="cv">Pilih File CV (PDF):</label>
+                    <input type="file" id="cv" name="cv" class="form-control-file" accept=".pdf" required>
+                    <small class="form-text text-muted">Max size: 5 MB</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Unggah dan Ekstrak CV</button>
+            </form>
+
+            {% if extracted_text %}
+                <div class="extracted-text-container mt-5">
+                    <h4 class="extracted-text-header text-center">Hasil Ekstraksi Teks:</h4>
+                    <div class="card-body">
+                        <pre>{{ extracted_text }}</pre>
+                    </div>
+                </div>
+                <a href="{{ url_for('upload') }}" class="btn btn-secondary btn-back mt-3">Kembali</a>
+            {% endif %}
+        </main>
+
+        <footer class="text-center py-3 mt-5 ">
+            <p>&copy; 2024 - Analisis CV Otomatis</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

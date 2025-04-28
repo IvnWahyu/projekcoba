@@ -4,29 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <title>Daftar Hasil Analisis</title>
 </head>
 <body>
-    <header class="bg-primary text-white text-center py-3">
-        <h1>Daftar Hasil Analisis</h1>
-        <nav class="nav justify-content-center">
-            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
-            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
-            {% if session.get('is_admin') %}
-                <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a>
-                <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('user_list') }}">Daftar Pengguna</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
-            {% endif %}
-            <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
-        </nav>
-    </header>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-center">Menu</h2>
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <a href="{{ url_for('upload') }}">Unggah CV</a>
+        {% if session.get('is_admin') %}
+            <a href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a href="{{ url_for('cv_list') }}">Daftar CV</a>
+            <a href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
+            <a href="{{ url_for('user_list') }}">Daftar Pengguna</a>
+            <a href="{{ url_for('analysis') }}">Analisis CV</a>
+            <a href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
 
-    <main class="container mt-5">
-        <h2>Hasil Analisis</h2>
-        {% if results %}
+    <!-- Content Section -->
+    <div class="content">
+        <!-- Main Content -->
+        <main class="container mt-3">
+            <div class="jumbotron text-center">
+                <h2 class="mb-3 fadeIn">Daftar Hasil Analisis</h2>
+                <p class="lead">Berikut adalah daftar hasil analisis CV yang telah dilakukan. Anda dapat melihat detail dan menghapus hasil analisis jika diperlukan.</p>
+            </div>
+
+            {% if results %}
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -58,13 +65,17 @@
                     {% endfor %}
                 </tbody>
             </table>
-        {% else %}
+            {% else %}
             <div class="alert alert-warning">Belum ada hasil analisis yang disimpan.</div>
-        {% endif %}
-    </main>
+            {% endif %}
+        </main>
 
-    <footer class="text-center py-3 mt-5">
-        <p>&copy; 2024 - Analisis CV Otomatis</p>
-    </footer>
+        <footer class="text-center py-3 mt-5">
+            <p>&copy; 2024 - Analisis CV Otomatis</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

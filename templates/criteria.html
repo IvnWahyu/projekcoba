@@ -4,108 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <title>Pengaturan Kriteria Penilaian CV</title>
 </head>
 <body>
-    <header class="bg-primary text-white text-center py-3">
-        <h1>Pengaturan Kriteria Penilaian CV</h1>
-        <nav class="nav justify-content-center">
-            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
-            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
-            {% if session.get('is_admin') %}
-                <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a>
-                <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('user_list') }}">Daftar Pengguna</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
-            {% endif %}
-            <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
-        </nav>
-    </header>
-    <main class="container mt-5">
-        <h2>Pengaturan Kriteria</h2>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-center">Menu</h2>
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <a href="{{ url_for('upload') }}">Unggah CV</a>
+        {% if session.get('is_admin') %}
+            <a href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a href="{{ url_for('cv_list') }}">Daftar CV</a>
+            <a href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
+            <a href="{{ url_for('user_list') }}">Daftar Pengguna</a>
+            <a href="{{ url_for('analysis') }}">Analisis CV</a>
+            <a href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
 
-        <!-- Notifikasi Penyimpanan -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="alert alert-success">
-                    {{ messages[0][1] }}
-                </div>
-            {% endif %}
-        {% endwith %}
-
-        <form method="POST">
-            <div class="form-group">
-                <label for="position">Posisi:</label>
-                <input type="text" id="position" name="position" class="form-control" placeholder="Contoh: Software Engineer" required>
+    <!-- Content Section -->
+    <div class="content">
+        <!-- Main Content -->
+        <main class="container mt-3">
+            <div class="jumbotron text-center">
+                <h2 class="mb-3 fadeIn">Pengaturan Kriteria Penilaian CV</h2>
+                <p class="lead">Atur kriteria yang digunakan untuk menilai CV kandidat dalam proses rekrutmen. Tambahkan posisi, pendidikan, pengalaman, keterampilan, sertifikasi, penghargaan, dan bahasa yang dibutuhkan.</p>
             </div>
 
-            <div class="form-group">
-                <label for="education">Pendidikan Minimum:</label>
-                <select id="education" name="education" class="form-control" required>
-                    <option value="sma">SMA</option>
-                    <option value="s1">S1</option>
-                    <option value="s2">S2</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="experience">Pengalaman Minimum (tahun):</label>
-                <input type="number" id="experience" name="experience" class="form-control" min="0" required>
-            </div>
-
-            <!-- Keterampilan -->
-            <div class="form-group">
-                <label for="skills">Keterampilan:</label>
-                <div id="skills-container">
-                    <div class="skill-item">
-                        <input type="text" name="skills[]" class="form-control" placeholder="Contoh: Pemrograman, Manajemen" required>
+            <!-- Notifikasi Penyimpanan -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="alert alert-success">
+                        {{ messages[0][1] }}
                     </div>
-                </div>
-                <button type="button" class="btn btn-secondary mt-2" onclick="addSkill()">Tambah Keterampilan</button>
-            </div>
+                {% endif %}
+            {% endwith %}
 
-            <!-- Sertifikasi (Wajib) -->
-            <div class="form-group">
-                <label for="certifications">Sertifikasi (Wajib):</label>
-                <div id="certifications-container">
-                    <div class="certification-item">
-                        <input type="text" name="certifications[]" class="form-control" placeholder="Contoh: Sertifikasi PMP, TOEFL" required>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="position">Posisi:</label>
+                    <input type="text" id="position" name="position" class="form-control" placeholder="Contoh: Software Engineer" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="education">Pendidikan Minimum:</label>
+                    <select id="education" name="education" class="form-control" required>
+                        <option value="sma">SMA</option>
+                        <option value="s1">S1</option>
+                        <option value="s2">S2</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">Pengalaman Minimum (tahun):</label>
+                    <input type="number" id="experience" name="experience" class="form-control" min="0" required>
+                </div>
+
+                <!-- Keterampilan -->
+                <div class="form-group">
+                    <label for="skills">Keterampilan:</label>
+                    <div id="skills-container">
+                        <div class="skill-item">
+                            <input type="text" name="skills[]" class="form-control" placeholder="Contoh: Pemrograman, Manajemen" required>
+                        </div>
                     </div>
+                    <button type="button" class="btn btn-secondary mt-2" onclick="addSkill()">Tambah Keterampilan</button>
                 </div>
-                <button type="button" class="btn btn-secondary mt-2" onclick="addCertification()">Tambah Sertifikasi</button>
-            </div>
 
-            <!-- Penghargaan dan Prestasi (Opsional) -->
-            <div class="form-group">
-                <label for="achievements">Penghargaan dan Prestasi (Opsional):</label>
-                <div id="achievements-container">
-                    <div class="achievement-item">
-                        <input type="text" name="achievements[]" class="form-control" placeholder="Contoh: Juara Kompetisi, Penghargaan Profesional">
+                <!-- Sertifikasi (Wajib) -->
+                <div class="form-group">
+                    <label for="certifications">Sertifikasi (Wajib):</label>
+                    <div id="certifications-container">
+                        <div class="certification-item">
+                            <input type="text" name="certifications[]" class="form-control" placeholder="Contoh: Sertifikasi PMP, TOEFL" required>
+                        </div>
                     </div>
+                    <button type="button" class="btn btn-secondary mt-2" onclick="addCertification()">Tambah Sertifikasi</button>
                 </div>
-                <button type="button" class="btn btn-secondary mt-2" onclick="addAchievement()">Tambah Penghargaan atau Prestasi</button>
-            </div>
 
-            <!-- Bahasa yang Dibutuhkan -->
-            <div class="form-group">
-                <label for="language">Bahasa yang Dibutuhkan:</label>
-                <div id="languages-container">
-                    <div class="language-item">
-                        <input type="text" name="languages[]" class="form-control" placeholder="Contoh: Bahasa Inggris, Bahasa Jepang" required>
+                <!-- Penghargaan dan Prestasi (Opsional) -->
+                <div class="form-group">
+                    <label for="achievements">Penghargaan dan Prestasi (Opsional):</label>
+                    <div id="achievements-container">
+                        <div class="achievement-item">
+                            <input type="text" name="achievements[]" class="form-control" placeholder="Contoh: Juara Kompetisi, Penghargaan Profesional">
+                        </div>
                     </div>
+                    <button type="button" class="btn btn-secondary mt-2" onclick="addAchievement()">Tambah Penghargaan atau Prestasi</button>
                 </div>
-                <button type="button" class="btn btn-secondary mt-2" onclick="addLanguage()">Tambah Bahasa</button>
-            </div>
 
-            <button type="submit" class="btn btn-primary">Simpan Kriteria</button>
-        </form>
-    </main>
-    <footer class="text-center py-3 mt-5">
-        <p>&copy; 2024 - Analisis CV Otomatis</p>
-    </footer>
+                <!-- Bahasa yang Dibutuhkan -->
+                <div class="form-group">
+                    <label for="language">Bahasa yang Dibutuhkan:</label>
+                    <div id="languages-container">
+                        <div class="language-item">
+                            <input type="text" name="languages[]" class="form-control" placeholder="Contoh: Bahasa Inggris, Bahasa Jepang" required>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary mt-2" onclick="addLanguage()">Tambah Bahasa</button>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Simpan Kriteria</button>
+            </form>
+        </main>
+
+        <footer class="text-center py-3 mt-5">
+            <p>&copy; 2024 - Analisis CV Otomatis</p>
+        </footer>
+    </div>
 
     <script>
         // Fungsi untuk menambah kolom keterampilan

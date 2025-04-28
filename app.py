@@ -22,7 +22,7 @@ db_config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'cv_analysis'
+    'database': 'cv_analysis2'
 }
 
 

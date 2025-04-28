@@ -4,36 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <title>Analisis CV - {{ cv[1] }}</title>
 </head>
 <body>
-    <header class="bg-primary text-white text-center py-3">
-        <h1>Analisis CV - {{ cv[1] }}</h1>
-        <nav class="nav justify-content-center">
-            <a class="nav-link text-white" href="{{ url_for('index') }}">Dashboard</a>
-            <a class="nav-link text-white" href="{{ url_for('upload') }}">Unggah CV</a>
-            {% if session.get('is_admin') %}
-                <a class="nav-link text-white" href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('cv_list') }}">Daftar CV</a>
-                <a class="nav-link text-white" href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
-                <a class="nav-link text-white" href="{{ url_for('user_list') }}">Daftar Pengguna</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
-                <a class="nav-link text-white" href="{{ url_for('analysis') }}">Analisis CV</a>
-            {% endif %}
-            <a class="nav-link text-white" href="{{ url_for('logout') }}">Logout</a>
-        </nav>
-    </header>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="text-center">Menu</h2>
+        <a href="{{ url_for('index') }}">Dashboard</a>
+        <a href="{{ url_for('upload') }}">Unggah CV</a>
+        {% if session.get('is_admin') %}
+            <a href="{{ url_for('criteria') }}">Pengaturan Kriteria</a>
+            <a href="{{ url_for('cv_list') }}">Daftar CV</a>
+            <a href="{{ url_for('criteria_list') }}">Daftar Kriteria</a>
+            <a href="{{ url_for('user_list') }}">Daftar Pengguna</a>
+            <a href="{{ url_for('analysis_results') }}">Hasil Analisis</a>
+            <a href="{{ url_for('analysis') }}">Analisis CV</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
 
-    <main class="container mt-5">
-        <h3>Teks Ekstraksi</h3>
-        <pre>{{ cv[2] }}</pre> <!-- Teks hasil ekstraksi -->
+    <!-- Content Section -->
+    <div class="content">
+        <!-- Main Content -->
+        <main class="container mt-3">
+            <div class="jumbotron text-center">
+                <h2 class="mb-3 fadeIn">Analisis CV - {{ cv[1] }}</h2>
+                <p class="lead">Berikut adalah teks ekstraksi dari CV yang dipilih, beserta hasil analisis berdasarkan kriteria yang ada.</p>
+            </div>
 
-        <h4 class="mt-4">Hasil Analisis:</h4>
-        {% for result, scores, criteria in zip(analysis_results, analysis_scores_list, selected_criteria_list) %}
+            <h3>Teks Ekstraksi</h3>
+            <pre>{{ cv[2] }}</pre> <!-- Display extracted text -->
+
+            <h4 class="mt-4">Hasil Analisis:</h4>
+            {% for result, scores, criteria in zip(analysis_results, analysis_scores_list, selected_criteria_list) %}
             <h5>Posisi: {{ criteria[1] }}</h5>
             <p>{{ result }}</p>
             <ul>
-                <li><strong>Durasi Pengalaman:</strong> {{ scores.experience_duration }} tahun</li> <!-- Tambahkan durasi pengalaman -->
+                <li><strong>Durasi Pengalaman:</strong> {{ scores.experience_duration }} tahun</li>
                 <li><strong>Skor Pendidikan:</strong> {{ scores.education_score }}</li>
                 <li><strong>Skor Pengalaman:</strong> {{ scores.experience_score }}</li>
                 <li><strong>Skor Keterampilan:</strong> {{ scores.skills_score }}</li>
@@ -52,20 +60,24 @@
                 </div>
             {% endif %}
 
-            <!-- Tombol Simpan Hasil -->
+            <!-- Save analysis result -->
             <form method="POST" action="{{ url_for('save_analysis', cv_id=cv[0], criteria_id=criteria[0]) }}" class="mt-3">
                 <input type="hidden" name="analysis_result" value="{{ result }}">
                 <input type="hidden" name="total_score" value="{{ scores.total_score }}">
                 <button type="submit" class="btn btn-success btn-sm">Simpan Hasil</button>
             </form>
             <hr>
-        {% endfor %}
+            {% endfor %}
 
-        <a href="{{ url_for('analysis') }}" class="btn btn-secondary mt-4">Kembali ke Halaman Analisis</a>
-    </main>
+            <a href="{{ url_for('analysis') }}" class="btn btn-secondary mt-4">Kembali ke Halaman Analisis</a>
+        </main>
 
-    <footer class="text-center py-3 mt-5">
-        <p>&copy; 2024 - Analisis CV Otomatis</p>
-    </footer>
+        <footer class="text-center py-3 mt-5">
+            <p>&copy; 2024 - Analisis CV Otomatis</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
