@@ -34,12 +34,12 @@
             </div>
 
             {% if criteria_positions %}
-                <ul class="list-group">
+                <ul class="list-group" id="criteriaList">
                     {% for criteria in criteria_positions %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <li class="list-group-item d-flex justify-content-between align-items-center cv-item" data-id="{{ criteria[0] }}">
                             {{ criteria[1] }} <!-- Posisi -->
                             <div>
-                                <a href="{{ url_for('view_criteria', criteria_id=criteria[0]) }}" class="btn btn-secondary btn-sm">Lihat Rincian</a>
+                                <a href="{{ url_for('view_criteria', criteria_id=criteria[0]) }}" class="btn btn-info btn-sm">Lihat Rincian</a>
                                 <form method="POST" action="{{ url_for('delete_criteria', criteria_id=criteria[0]) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kriteria ini?');">
                                     <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                                 </form>

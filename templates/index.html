@@ -40,7 +40,7 @@
 
             <!-- Statistik Ringkasan -->
             <div class="row text-center mt-5" id="stats">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card border-primary mb-4">
                         <div class="card-body">
                             <h5 class="card-title">Total CV Diupload</h5>
@@ -52,7 +52,7 @@
 
                 {% if session.get('is_admin') %}
                 <!-- Statistik untuk Admin -->
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card border-success mb-4">
                         <div class="card-body">
                             <h5 class="card-title">Total Pengguna</h5>
@@ -63,7 +63,7 @@
                 </div>
                 {% else %}
                 <!-- Informasi Akun untuk Pengguna Biasa -->
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card border-info mb-4">
                         <div class="card-body">
                             <h5 class="card-title">Informasi Akun</h5>
