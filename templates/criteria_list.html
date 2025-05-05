@@ -34,19 +34,39 @@
             </div>
 
             {% if criteria_positions %}
-                <ul class="list-group" id="criteriaList">
-                    {% for criteria in criteria_positions %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center cv-item" data-id="{{ criteria[0] }}">
-                            {{ criteria[1] }} <!-- Posisi -->
-                            <div>
-                                <a href="{{ url_for('view_criteria', criteria_id=criteria[0]) }}" class="btn btn-info btn-sm">Lihat Rincian</a>
-                                <form method="POST" action="{{ url_for('delete_criteria', criteria_id=criteria[0]) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kriteria ini?');">
-                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                </form>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Posisi</th>
+                            <th scope="col">Pendidikan Minimum</th>
+                            <th scope="col">Pengalaman Minimum</th>
+                            <th scope="col">Keterampilan</th>
+                            <th scope="col">Bahasa</th>
+                            <th scope="col">Sertifikasi</th>
+                            <th scope="col">Penghargaan</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for criteria in criteria_positions %}
+                            <tr>
+                                <td>{{ criteria[1] }}</td>
+                                <td>{{ criteria[2] }}</td>
+                                <td>{{ criteria[3] }} Tahun</td>
+                                <td>{{ criteria[4] }}</td>
+                                <td>{{ criteria[5] }}</td>
+                                <td>{{ criteria[6] }}</td>
+                                <td>{{ criteria[7] }}</td>
+                                <td>
+                                    <a href="{{ url_for('view_criteria', criteria_id=criteria[0]) }}" class="btn btn-info btn-sm">Rincian</a>
+                                    <form method="POST" action="{{ url_for('delete_criteria', criteria_id=criteria[0]) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kriteria ini?');">
+                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             {% else %}
                 <div class="alert alert-warning" role="alert">Tidak ada kriteria yang disimpan.</div>
             {% endif %}
@@ -56,8 +76,5 @@
             <p>&copy; 2024 - Analisis CV Otomatis</p>
         </footer>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

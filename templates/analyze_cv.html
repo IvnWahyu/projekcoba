@@ -64,12 +64,14 @@
             <form method="POST" action="{{ url_for('save_analysis', cv_id=cv[0], criteria_id=criteria[0]) }}" class="mt-3">
                 <input type="hidden" name="analysis_result" value="{{ result }}">
                 <input type="hidden" name="total_score" value="{{ scores.total_score }}">
-                <button type="submit" class="btn btn-success btn-sm">Simpan Hasil</button>
+                <button type="submit" class=" text-center mt-4 btn btn-success btn-sm">Simpan Hasil</button>
             </form>
             <hr>
             {% endfor %}
 
-            <a href="{{ url_for('analysis') }}" class="btn btn-secondary mt-4">Kembali ke Halaman Analisis</a>
+            <div class="text-center mt-4">
+                <a href="{{ url_for('analysis') }}" class="btn btn-secondary">Kembali ke Halaman Analisis</a>
+            </div>
         </main>
 
         <footer class="text-center py-3 mt-5">

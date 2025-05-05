@@ -34,19 +34,27 @@
             </div>
 
             {% if cvs %}
-                <ul class="list-group" id="cvList">
-                    {% for cv in cvs %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center cv-item" data-id="{{ cv[0] }}">
-                            {{ cv[1] }} <!-- Nama File CV -->
-                            <div>
-                                <a href="{{ url_for('view_extracted_text', cv_id=cv[0]) }}" class="btn btn-info btn-sm">Lihat Teks</a>
-                                <form method="POST" action="{{ url_for('delete_cv', cv_id=cv[0]) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus CV ini?');">
-                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                                </form>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nama File</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cv in cvs %}
+                            <tr>
+                                <td>{{ cv[1] }}</td>
+                                <td>
+                                    <a href="{{ url_for('view_extracted_text', cv_id=cv[0]) }}" class="btn btn-info btn-sm">Lihat Teks</a>
+                                    <form method="POST" action="{{ url_for('delete_cv', cv_id=cv[0]) }}" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus CV ini?');">
+                                        <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             {% else %}
                 <div class="alert alert-warning" role="alert">Tidak ada CV yang diunggah.</div>
             {% endif %}
@@ -59,36 +67,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cvList = document.getElementById('cvList');
-
-            if (cvList) {
-                // Add click event listener to all delete buttons
-                cvList.querySelectorAll('.delete-cv').forEach((deleteBtn) => {
-                    deleteBtn.addEventListener('click', (event) => {
-                        const cvItem = event.target.closest('.cv-item');
-                        const cvId = cvItem.getAttribute('data-id');
-
-                        if (confirm('Apakah Anda yakin ingin menghapus CV ini?')) {
-                            // Call the backend API to delete CV
-                            fetch(`/delete_cv/${cvId}`, {
-                                method: 'POST',
-                            })
-                            .then((response) => response.json())
-                            .then((data) => {
-                                if (data.success) {
-                                    // Remove the CV from the list if deletion is successful
-                                    cvItem.remove();
-                                } else {
-                                    alert('Gagal menghapus CV.');
-                                }
-                            });
-                        }
-                    });
-                });
-            }
-        });
-    </script>
 </body>
 </html>
+

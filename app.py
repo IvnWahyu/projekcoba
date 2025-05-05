@@ -229,7 +229,7 @@ def criteria_list():
     # Ambil semua kriteria penilaian
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, posisi FROM Kriteria_Penilaian")  # Ambil semua posisi dari kriteria
+    cursor.execute("SELECT id, posisi, pendidikan_minimum, pengalaman_minimum, keterampilan, bahasa, sertifikasi, penghargaan_prestasi FROM Kriteria_Penilaian")  # Ambil semua kriteria
     criteria_positions = cursor.fetchall()
     conn.close()
 
